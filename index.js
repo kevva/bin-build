@@ -5,7 +5,7 @@ var rm = require('rimraf');
 var tempfile = require('tempfile');
 
 /**
- * Binary build tool
+ * Initialize new `BinBuild`
  *
  * @api public
  */
