@@ -24,7 +24,7 @@ build
         }
 
         console.log('gifsicle built successfully');
-    })
+    });
 ```
 
 ## API
