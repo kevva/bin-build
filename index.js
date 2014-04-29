@@ -14,9 +14,6 @@ function BinBuild() {
     if (!(this instanceof BinBuild)) {
         return new BinBuild();
     }
-
-    this.cfg('./configure');
-    this.make('make install');
 }
 
 /**
