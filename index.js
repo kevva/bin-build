@@ -14,6 +14,8 @@ function BinBuild() {
     if (!(this instanceof BinBuild)) {
         return new BinBuild();
     }
+
+    this._cmd = [];
 }
 
 /**
@@ -33,34 +35,18 @@ BinBuild.prototype.src = function (str) {
 };
 
 /**
- * Configure
+ * Add a command to run
  *
  * @param {String} str
  * @api public
  */
 
-BinBuild.prototype.cfg = function (str) {
+BinBuild.prototype.cmd = function (str) {
     if (!arguments.length) {
-        return this._cfg;
+        return this._cmd;
     }
 
-    this._cfg = str;
-    return this;
-};
-
-/**
- * Make
- *
- * @param {String} str
- * @api public
- */
-
-BinBuild.prototype.make = function (str) {
-    if (!arguments.length) {
-        return this._make;
-    }
-
-    this._make = str;
+    this._cmd.push(str);
     return this;
 };
 
@@ -73,16 +59,8 @@ BinBuild.prototype.make = function (str) {
 
 BinBuild.prototype.build = function (cb) {
     var download = require('download');
-    var str;
+    var str = this.cmd().join(' && ');
     var tmp = tempfile();
-
-    if (this.cfg() && this.make()) {
-        str = this.cfg() + ' && ' + this.make();
-    } else if (!this.cfg() && this.make()) {
-        str = this.make();
-    } else {
-        cb();
-    }
 
     download(this.src(), tmp, { strip: 1, extract: true })
         .on('error', cb)

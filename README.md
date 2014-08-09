@@ -16,8 +16,8 @@ var build = new BinBuild();
 
 build
     .src('http://www.lcdf.org/gifsicle/gifsicle-1.80.tar.gz')
-    .cfg('./configure --disable-gifview --disable-gifdiff')
-    .make('make install')
+    .cmd('./configure --disable-gifview --disable-gifdiff')
+    .cmd('make install')
     .build(function (err) {
         if (err) {
             throw err;
@@ -37,13 +37,9 @@ Creates a new `BinBuild` instance.
 
 Accepts a URL to a archive containing the source code.
 
-### .cfg(str)
+### .cmd(str)
 
-String with configuration options to be run before `make`.
-
-### .make(str)
-
-String with `make` commands.
+Add a command to run when building.
 
 ### .build(cb)
 

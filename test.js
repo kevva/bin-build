@@ -14,9 +14,11 @@ describe('BinBuild()', function () {
 
         build
             .src('http://www.lcdf.org/gifsicle/gifsicle-1.80.tar.gz')
-            .cfg('./configure --disable-gifview --disable-gifdiff --prefix="' + tmp + '" --bindir="' + tmp + '"')
-            .make('make install')
-            .build(function () {
+            .cmd('./configure --disable-gifview --disable-gifdiff --prefix="' + tmp + '" --bindir="' + tmp + '"')
+            .cmd('make install')
+            .build(function (err) {
+                assert(!err);
+
                 fs.exists(path.join(tmp, 'gifsicle'), function (exists) {
                     assert(exists);
                     rm(tmp, cb);
