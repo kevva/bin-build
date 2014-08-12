@@ -58,21 +58,26 @@ BinBuild.prototype.cmd = function (str) {
  */
 
 BinBuild.prototype.build = function (cb) {
-    var download = require('download');
+    var Download = require('download');
     var str = this.cmd().join(' && ');
     var tmp = tempfile();
 
-    download(this.src(), tmp, { strip: 1, extract: true })
-        .on('error', cb)
-        .on('close', function () {
-            exec(str, { cwd: tmp }, function (err) {
-                if (err) {
-                    return cb(err);
-                }
+    var download = new Download({ strip: 1, extract: true })
+        .get(this.src(), tmp);
 
-                rm(tmp, cb);
-            });
+    download.run(function (err) {
+        if (err) {
+            return cb(err);
+        }
+
+        exec(str, { cwd: tmp }, function (err) {
+            if (err) {
+                return cb(err);
+            }
+
+            rm(tmp, cb);
         });
+    });
 };
 
 /**

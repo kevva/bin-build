@@ -24,7 +24,7 @@
     "make"
   ],
   "dependencies": {
-    "download": "^0.1.16",
+    "download": "^0.2.0",
     "rimraf": "^2.2.6",
     "tempfile": "^0.1.3"
   },
