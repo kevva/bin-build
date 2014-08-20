@@ -59,9 +59,10 @@ BinBuild.prototype.cmd = function (str) {
  */
 
 BinBuild.prototype.build = function (cb) {
+    cb = cb || function () {};
+
     var str = this.cmd().join(' && ');
     var tmp = tempfile();
-
     var download = new Download({ strip: 1, extract: true })
         .get(this.src(), tmp);
 

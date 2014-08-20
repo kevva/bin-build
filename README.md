@@ -12,19 +12,19 @@ $ npm install --save bin-build
 
 ```js
 var BinBuild = require('bin-build');
-var build = new BinBuild();
 
-build
+var build = new BinBuild()
     .src('http://www.lcdf.org/gifsicle/gifsicle-1.80.tar.gz')
     .cmd('./configure --disable-gifview --disable-gifdiff')
-    .cmd('make install')
-    .build(function (err) {
-        if (err) {
-            throw err;
-        }
+    .cmd('make install');
 
-        console.log('gifsicle built successfully');
-    });
+build.build(function (err) {
+    if (err) {
+        throw err;
+    }
+
+    console.log('gifsicle built successfully');
+});
 ```
 
 ## API
@@ -43,7 +43,7 @@ Add a command to run when building.
 
 ### .build(cb)
 
-Runs the build.
+Runs the build and returns an error if something has gone wrong
 
 ## License
 
