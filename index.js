@@ -1,6 +1,7 @@
 'use strict';
 
 var exec = require('child_process').exec;
+var Download = require('download');
 var rm = require('rimraf');
 var tempfile = require('tempfile');
 
@@ -58,7 +59,6 @@ BinBuild.prototype.cmd = function (str) {
  */
 
 BinBuild.prototype.build = function (cb) {
-    var Download = require('download');
     var str = this.cmd().join(' && ');
     var tmp = tempfile();
 
@@ -67,12 +67,14 @@ BinBuild.prototype.build = function (cb) {
 
     download.run(function (err) {
         if (err) {
-            return cb(err);
+            cb(err);
+            return;
         }
 
         exec(str, { cwd: tmp }, function (err) {
             if (err) {
-                return cb(err);
+                cb(err);
+                return;
             }
 
             rm(tmp, cb);
