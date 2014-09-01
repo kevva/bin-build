@@ -36,7 +36,6 @@ test('should download and build source', function (t) {
     var tmp = path.join(__dirname, 'tmp');
     var build = new BinBuild()
         .src('http://www.lcdf.org/gifsicle/gifsicle-1.84.tar.gz')
-        .cmd('chmod +x ./configure')
         .cmd('./configure --disable-gifview --disable-gifdiff --prefix="' + tmp + '" --bindir="' + tmp + '"')
         .cmd('make install');
 
