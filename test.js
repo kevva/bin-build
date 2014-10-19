@@ -35,12 +35,13 @@ test('should download and build source', function (t) {
 
     var tmp = path.join(__dirname, 'tmp');
     var build = new BinBuild()
-        .src('http://www.lcdf.org/gifsicle/gifsicle-1.84.tar.gz')
+        .src('http://www.lcdf.org/gifsicle/gifsicle-1.86.tar.gz')
+        .cmd('autoreconf -ivf')
         .cmd('./configure --disable-gifview --disable-gifdiff --prefix="' + tmp + '" --bindir="' + tmp + '"')
         .cmd('make install');
 
     build.build(function (err) {
-        t.assert(!err);
+        t.assert(!err, err);
 
         fs.exists(path.join(tmp, 'gifsicle'), function (exists) {
             t.assert(exists);
