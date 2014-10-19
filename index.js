@@ -8,14 +8,17 @@ var tempfile = require('tempfile');
 /**
  * Initialize new `BinBuild`
  *
+ * @param {Object} opts
  * @api public
  */
 
-function BinBuild() {
+function BinBuild(opts) {
 	if (!(this instanceof BinBuild)) {
-		return new BinBuild();
+		return new BinBuild(opts);
 	}
 
+	this.opts = opts || {};
+	this.opts.strip = this.opts.strip || 1;
 	this._cmd = [];
 }
 
@@ -63,9 +66,14 @@ BinBuild.prototype.build = function (cb) {
 
 	var str = this.cmd().join(' && ');
 	var tmp = tempfile();
-	var download = new Download({ strip: 1, extract: true, mode: '777' })
-		.get(this.src())
-		.dest(tmp);
+	var download = new Download({
+		strip: this.opts.strip,
+		extract: true,
+		mode: '777'
+	});
+
+	download.get(this.src());
+	download.dest(tmp);
 
 	download.run(function (err) {
 		if (err) {

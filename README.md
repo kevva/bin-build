@@ -29,9 +29,11 @@ build.build(function (err) {
 
 ## API
 
-### new BinBuild
+### new BinBuild(opts)
 
-Creates a new `BinBuild` instance.
+Creates a new `BinBuild` instance. Available options are:
+
+* `strip`: Strip a number of leading paths from file names on extraction. Defaults to `1`.
 
 ### .src(str)
 
