@@ -34,9 +34,15 @@ test('should download and build source', function (t) {
 	t.plan(2);
 
 	var tmp = path.join(__dirname, 'tmp');
+	var cmd = [
+		'./configure --disable-gifview --disable-gifdiff',
+		'--prefix="' + tmp + '" --bindir="' + tmp + '"'
+	].join(' ');
+
 	var build = new BinBuild()
 		.src('http://www.lcdf.org/gifsicle/gifsicle-1.84.tar.gz')
-		.cmd('./configure --disable-gifview --disable-gifdiff --prefix="' + tmp + '" --bindir="' + tmp + '"')
+		.cmd('autoreconf -ivf')
+		.cmd(cmd)
 		.cmd('make install');
 
 	build.build(function (err) {
