@@ -1,6 +1,6 @@
 {
   "name": "bin-build",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Easily build binaries",
   "license": "MIT",
   "repository": "kevva/bin-build",
