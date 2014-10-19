@@ -14,16 +14,16 @@ $ npm install --save bin-build
 var BinBuild = require('bin-build');
 
 var build = new BinBuild()
-    .src('http://www.lcdf.org/gifsicle/gifsicle-1.80.tar.gz')
-    .cmd('./configure --disable-gifview --disable-gifdiff')
-    .cmd('make install');
+	.src('http://www.lcdf.org/gifsicle/gifsicle-1.80.tar.gz')
+	.cmd('./configure --disable-gifview --disable-gifdiff')
+	.cmd('make install');
 
 build.build(function (err) {
-    if (err) {
-        throw err;
-    }
+	if (err) {
+		throw err;
+	}
 
-    console.log('gifsicle built successfully');
+	console.log('gifsicle built successfully');
 });
 ```
 

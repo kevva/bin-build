@@ -12,11 +12,11 @@ var tempfile = require('tempfile');
  */
 
 function BinBuild() {
-    if (!(this instanceof BinBuild)) {
-        return new BinBuild();
-    }
+	if (!(this instanceof BinBuild)) {
+		return new BinBuild();
+	}
 
-    this._cmd = [];
+	this._cmd = [];
 }
 
 /**
@@ -27,12 +27,12 @@ function BinBuild() {
  */
 
 BinBuild.prototype.src = function (str) {
-    if (!arguments.length) {
-        return this._src;
-    }
+	if (!arguments.length) {
+		return this._src;
+	}
 
-    this._src = str;
-    return this;
+	this._src = str;
+	return this;
 };
 
 /**
@@ -43,12 +43,12 @@ BinBuild.prototype.src = function (str) {
  */
 
 BinBuild.prototype.cmd = function (str) {
-    if (!arguments.length) {
-        return this._cmd;
-    }
+	if (!arguments.length) {
+		return this._cmd;
+	}
 
-    this._cmd.push(str);
-    return this;
+	this._cmd.push(str);
+	return this;
 };
 
 /**
@@ -59,28 +59,28 @@ BinBuild.prototype.cmd = function (str) {
  */
 
 BinBuild.prototype.build = function (cb) {
-    cb = cb || function () {};
+	cb = cb || function () {};
 
-    var str = this.cmd().join(' && ');
-    var tmp = tempfile();
-    var download = new Download({ strip: 1, extract: true, mode: 777 })
-        .get(this.src(), tmp);
+	var str = this.cmd().join(' && ');
+	var tmp = tempfile();
+	var download = new Download({ strip: 1, extract: true, mode: 777 })
+		.get(this.src(), tmp);
 
-    download.run(function (err) {
-        if (err) {
-            cb(err);
-            return;
-        }
+	download.run(function (err) {
+		if (err) {
+			cb(err);
+			return;
+		}
 
-        exec(str, { cwd: tmp }, function (err) {
-            if (err) {
-                cb(err);
-                return;
-            }
+		exec(str, { cwd: tmp }, function (err) {
+			if (err) {
+				cb(err);
+				return;
+			}
 
-            rm(tmp, cb);
-        });
-    });
+			rm(tmp, cb);
+		});
+	});
 };
 
 /**
