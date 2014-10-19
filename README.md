@@ -37,13 +37,19 @@ Creates a new `BinBuild` instance. Available options are:
 
 ### .src(str)
 
+Type: `String`
+
 Accepts a URL to a archive containing the source code.
 
 ### .cmd(str)
 
+Type: `String`
+
 Add a command to run when building.
 
 ### .build(cb)
+
+Type: `Function`
 
 Runs the build and returns an error if something has gone wrong
 
