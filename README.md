@@ -18,7 +18,7 @@ var build = new BinBuild()
 	.cmd('./configure --disable-gifview --disable-gifdiff')
 	.cmd('make install');
 
-build.build(function (err) {
+build.run(function (err) {
 	if (err) {
 		throw err;
 	}
@@ -47,7 +47,7 @@ Type: `String`
 
 Add a command to run when building.
 
-### .build(cb)
+### .run(cb)
 
 Type: `Function`
 

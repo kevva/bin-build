@@ -45,7 +45,7 @@ test('should download and build source', function (t) {
 		.cmd(cmd)
 		.cmd('make install');
 
-	build.build(function (err) {
+	build.run(function (err) {
 		t.assert(!err, err);
 
 		fs.exists(path.join(tmp, 'gifsicle'), function (exists) {

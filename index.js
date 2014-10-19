@@ -61,7 +61,7 @@ BinBuild.prototype.cmd = function (str) {
  * @api public
  */
 
-BinBuild.prototype.build = function (cb) {
+BinBuild.prototype.run = function (cb) {
 	cb = cb || function () {};
 
 	var str = this.cmd().join(' && ');
