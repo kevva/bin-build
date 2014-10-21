@@ -30,7 +30,7 @@ test('add commands to run', function (t) {
 	t.assert(build._cmd[1] === 'make install');
 });
 
-test('should download and build source', function (t) {
+test('download and build source', function (t) {
 	t.plan(2);
 
 	var tmp = path.join(__dirname, 'tmp');
@@ -40,7 +40,7 @@ test('should download and build source', function (t) {
 	].join(' ');
 
 	var build = new BinBuild()
-		.src('http://www.lcdf.org/gifsicle/gifsicle-1.84.tar.gz')
+		.src('http://www.lcdf.org/gifsicle/gifsicle-1.86.tar.gz')
 		.cmd('autoreconf -ivf')
 		.cmd(cmd)
 		.cmd('make install');
@@ -51,5 +51,20 @@ test('should download and build source', function (t) {
 		fs.exists(path.join(tmp, 'gifsicle'), function (exists) {
 			t.assert(exists);
 		});
+	});
+});
+
+test('pass the command error to the callback', function (t) {
+	t.plan(1);
+
+	var build = new BinBuild()
+		.src('http://www.lcdf.org/gifsicle/gifsicle-1.86.tar.gz')
+		.cmd('autoreconf -ivf')
+		.cmd('unknown-command')
+		.cmd('./configure')
+		.cmd('make install');
+
+	build.run(function (err) {
+		t.assert(err);
 	});
 });

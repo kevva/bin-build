@@ -25,6 +25,7 @@
   ],
   "dependencies": {
     "download": "^3.1.0",
+    "exec-series": "^1.0.0",
     "rimraf": "^2.2.6",
     "tempfile": "^1.0.0"
   },
