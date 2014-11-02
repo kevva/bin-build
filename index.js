@@ -24,6 +24,7 @@ function BinBuild(opts) {
 	this.opts = opts || {};
 	this.opts.strip = this.opts.strip || 1;
 	this._cmd = [];
+	this._tmp = tempfile();
 }
 
 /**
@@ -67,9 +68,7 @@ BinBuild.prototype.cmd = function (str) {
 
 BinBuild.prototype.run = function (cb) {
 	cb = cb || function () {};
-
 	var self = this;
-	this._tmp = tempfile();
 
 	if (urlRegex().test(this.src())) {
 		return this.get(function (err) {
