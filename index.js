@@ -1,9 +1,13 @@
 'use strict';
 
+var archiveType = require('archive-type');
 var execSeries = require('exec-series');
+var Decompress = require('decompress');
 var Download = require('download');
+var read = require('fs').readFile;
 var rm = require('rimraf');
 var tempfile = require('tempfile');
+var urlRegex = require('url-regex');
 
 /**
  * Initialize new `BinBuild`
@@ -64,8 +68,88 @@ BinBuild.prototype.cmd = function (str) {
 BinBuild.prototype.run = function (cb) {
 	cb = cb || function () {};
 
-	var commands = this.cmd();
-	var tmp = tempfile();
+	var self = this;
+	this._tmp = tempfile();
+
+	if (urlRegex().test(this.src())) {
+		return this.get(function (err) {
+			if (err) {
+				cb(err);
+				return;
+			}
+
+			self.exec(self._tmp, cb);
+		});
+	}
+
+	read(this.src(), function (err, data) {
+		if (err && err.code !== 'EISDIR') {
+			cb(err);
+			return;
+		}
+
+		if (archiveType(data)) {
+			return self.decompress(function (err) {
+				if (err) {
+					cb(err);
+					return;
+				}
+
+				self.exec(self._tmp, cb);
+			});
+		}
+
+		self.exec(self.src(), cb);
+	});
+};
+
+/**
+ * Execute commands
+ *
+ * @param {String} cwd
+ * @param {Function} cb
+ * @api private
+ */
+
+BinBuild.prototype.exec = function (cwd, cb) {
+	var self = this;
+
+	execSeries(this.cmd(), { cwd: cwd }, function (err) {
+		if (err) {
+			cb(err);
+			return;
+		}
+
+		rm(self._tmp, cb);
+	});
+};
+
+/**
+ * Decompress source
+ *
+ * @param {Function} cb
+ * @api private
+ */
+
+BinBuild.prototype.decompress = function (cb) {
+	var decompress = new Decompress({
+		mode: '777',
+		strip: this.opts.strip
+	});
+
+	decompress.src(this.src());
+	decompress.dest(this._tmp);
+	decompress.run(cb);
+};
+
+/**
+ * Download source
+ *
+ * @param {Function} cb
+ * @api private
+ */
+
+BinBuild.prototype.get = function (cb) {
 	var download = new Download({
 		strip: this.opts.strip,
 		extract: true,
@@ -73,23 +157,8 @@ BinBuild.prototype.run = function (cb) {
 	});
 
 	download.get(this.src());
-	download.dest(tmp);
-
-	download.run(function (err) {
-		if (err) {
-			cb(err);
-			return;
-		}
-
-		execSeries(commands, { cwd: tmp }, function (err) {
-			if (err) {
-				cb(err);
-				return;
-			}
-
-			rm(tmp, cb);
-		});
-	});
+	download.dest(this._tmp);
+	download.run(cb);
 };
 
 /**
