@@ -39,7 +39,8 @@ Creates a new `BinBuild` instance. Available options are:
 
 Type: `String`
 
-Accepts a URL to a archive containing the source code.
+Accepts a URL to a archive containing the source code, a path to an archive or a 
+path to a directory containing the source code.
 
 ### .cmd(str)
 
