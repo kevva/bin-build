@@ -30,10 +30,10 @@
     "exec-series": "^1.0.0",
     "rimraf": "^2.2.6",
     "tempfile": "^1.0.0",
-    "url-regex": "^1.0.4"
+    "url-regex": "^2.0.2"
   },
   "devDependencies": {
     "ava": "^0.0.4",
-    "nock": "^0.48.2"
+    "nock": "^0.50.0"
   }
 }
