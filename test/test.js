@@ -55,10 +55,7 @@ test('download and build source', function (t) {
 
 	build.run(function (err) {
 		t.assert(!err, err);
-
-		fs.exists(path.join(tmp, 'gifsicle'), function (exists) {
-			t.assert(exists);
-		});
+		fs.exists(path.join(tmp, 'gifsicle'), t.assert.bind(t));
 	});
 });
 
@@ -79,10 +76,7 @@ test('build source from existing archive', function (t) {
 
 	build.run(function (err) {
 		t.assert(!err, err);
-
-		fs.exists(path.join(tmp, 'gifsicle'), function (exists) {
-			t.assert(exists);
-		});
+		fs.exists(path.join(tmp, 'gifsicle'), t.assert.bind(t));
 	});
 });
 
@@ -139,7 +133,5 @@ test('pass the command error to the callback', function (t) {
 		.cmd('./configure')
 		.cmd('make install');
 
-	build.run(function (err) {
-		t.assert(err);
-	});
+	build.run(t.assert.bind(t));
 });
