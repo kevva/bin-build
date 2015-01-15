@@ -120,7 +120,7 @@ test('build source from existing folder', function (t) {
 });
 
 test('pass the command error to the callback', function (t) {
-	t.plan(1);
+	t.plan(2);
 
 	nock('http://foo.com')
 		.get('/gifsicle.tar.gz')
@@ -133,5 +133,8 @@ test('pass the command error to the callback', function (t) {
 		.cmd('./configure')
 		.cmd('make install');
 
-	build.run(t.assert.bind(t));
+	build.run(function (err) {
+		t.assert(err);
+		t.assert(err.message.indexOf(build.cmd().join(' && ')) !== -1);
+	});
 });
