@@ -115,6 +115,7 @@ BinBuild.prototype.exec = function (cwd, cb) {
 
 	execSeries(this.cmd(), { cwd: cwd }, function (err) {
 		if (err) {
+			err.message = [self.cmd().join(' && '), err.message].join('\n');
 			cb(err);
 			return;
 		}
