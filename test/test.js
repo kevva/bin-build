@@ -79,9 +79,9 @@ test('build source from existing archive', function (t) {
 });
 
 test('pass the command error to the callback', function (t) {
-	t.plan(3);
+	t.plan(2);
 
-	var scope = nock('http://foo.com')
+	nock('http://foo.com')
 		.get('/gifsicle.tar.gz')
 		.replyWithFile(200, fixture('test.tar.gz'));
 
@@ -95,6 +95,5 @@ test('pass the command error to the callback', function (t) {
 	build.run(function (err) {
 		t.assert(err);
 		t.assert(err.message.indexOf(build.cmd().join(' && ')) !== -1);
-		t.assert(scope.isDone());
 	});
 });
