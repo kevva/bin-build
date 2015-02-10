@@ -1,12 +1,10 @@
 'use strict';
 
 var BinBuild = require('../');
-var Decompress = require('decompress');
 var fs = require('fs');
 var nock = require('nock');
 var path = require('path');
 var fixture = path.join.bind(null, __dirname, 'fixtures');
-var rm = require('rimraf');
 var test = require('ava');
 
 test('expose a constructor', function (t) {
@@ -35,94 +33,55 @@ test('add commands to run', function (t) {
 });
 
 test('download and build source', function (t) {
-	t.plan(2);
+	t.plan(3);
 
-	nock('http://foo.com')
+	var tmp = path.join(__dirname, 'tmp');
+	var scope = nock('http://foo.com')
 		.get('/gifsicle.tar.gz')
 		.replyWithFile(200, fixture('test.tar.gz'));
 
-	var tmp = path.join(__dirname, 'tmp');
-	var cmd = [
-		'./configure --disable-gifview --disable-gifdiff',
-		'--prefix="' + tmp + '" --bindir="' + tmp + '"'
-	].join(' ');
-
-	var build = new BinBuild()
+	new BinBuild()
 		.src('http://foo.com/gifsicle.tar.gz')
 		.cmd('autoreconf -ivf')
-		.cmd(cmd)
-		.cmd('make install');
-
-	build.run(function (err) {
-		t.assert(!err, err);
-		fs.exists(path.join(tmp, 'gifsicle'), t.assert.bind(t));
-	});
+		.cmd([
+			'./configure --disable-gifview --disable-gifdiff',
+			'--prefix="' + tmp + '" --bindir="' + tmp + '"'
+		].join(' '))
+		.cmd('make install')
+		.run(function (err) {
+			t.assert(!err, err);
+			t.assert(scope.isDone());
+			t.assert(fs.existsSync(path.join(tmp, 'gifsicle')));
+		});
 });
 
 test('build source from existing archive', function (t) {
-	t.plan(2);
+	t.plan(3);
 
 	var tmp = path.join(__dirname, 'tmp');
-	var cmd = [
-		'./configure --disable-gifview --disable-gifdiff',
-		'--prefix="' + tmp + '" --bindir="' + tmp + '"'
-	].join(' ');
+	var scope = nock('http://foo.com')
+		.get('/gifsicle.tar.gz')
+		.replyWithFile(200, fixture('test.tar.gz'));
 
-	var build = new BinBuild()
+	new BinBuild()
 		.src(fixture('test.tar.gz'))
 		.cmd('autoreconf -ivf')
-		.cmd(cmd)
-		.cmd('make install');
-
-	build.run(function (err) {
-		t.assert(!err, err);
-		fs.exists(path.join(tmp, 'gifsicle'), t.assert.bind(t));
-	});
-});
-
-test('build source from existing folder', function (t) {
-	t.plan(4);
-
-	var decompress = new Decompress({
-		mode: '777',
-		strip: 1
-	});
-
-	decompress.src(fixture('test.tar.gz'));
-	decompress.dest(fixture('test-directory'));
-	decompress.run(function (err) {
-		t.assert(!err, err);
-
-		var tmp = path.join(__dirname, 'tmp');
-		var cmd = [
+		.cmd([
 			'./configure --disable-gifview --disable-gifdiff',
 			'--prefix="' + tmp + '" --bindir="' + tmp + '"'
-		].join(' ');
-
-		var build = new BinBuild()
-			.src(fixture('test-directory'))
-			.cmd('autoreconf -ivf')
-			.cmd(cmd)
-			.cmd('make install');
-
-		build.run(function (err) {
+		].join(' '))
+		.cmd('make install')
+		.run(function (err) {
 			t.assert(!err, err);
-
-			fs.exists(path.join(tmp, 'gifsicle'), function (exists) {
-				t.assert(exists);
-
-				rm(fixture('test-directory'), function (err) {
-					t.assert(!err, err);
-				});
-			});
+			t.assert(scope.isDone());
+			t.assert(fs.existsSync(path.join(tmp, 'gifsicle')));
 		});
-	});
 });
 
 test('pass the command error to the callback', function (t) {
-	t.plan(2);
+	t.plan(3);
 
-	nock('http://foo.com')
+	var scope = nock('http://foo.com')
 		.get('/gifsicle.tar.gz')
 		.replyWithFile(200, fixture('test.tar.gz'));
 
@@ -136,5 +95,6 @@ test('pass the command error to the callback', function (t) {
 	build.run(function (err) {
 		t.assert(err);
 		t.assert(err.message.indexOf(build.cmd().join(' && ')) !== -1);
+		t.assert(scope.isDone());
 	});
 });

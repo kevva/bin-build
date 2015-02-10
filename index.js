@@ -4,7 +4,7 @@ var archiveType = require('archive-type');
 var execSeries = require('exec-series');
 var Decompress = require('decompress');
 var Download = require('download');
-var read = require('fs').readFile;
+var fs = require('fs');
 var rm = require('rimraf');
 var tempfile = require('tempfile');
 var urlRegex = require('url-regex');
@@ -23,8 +23,7 @@ function BinBuild(opts) {
 
 	this.opts = opts || {};
 	this.opts.strip = this.opts.strip <= 0 ? 0 : !this.opts.strip ? 1 : this.opts.strip;
-	this._cmd = [];
-	this._tmp = tempfile();
+	this.tmp = tempfile();
 }
 
 /**
@@ -55,7 +54,9 @@ BinBuild.prototype.cmd = function (str) {
 		return this._cmd;
 	}
 
+	this._cmd = this._cmd || [];
 	this._cmd.push(str);
+
 	return this;
 };
 
@@ -68,38 +69,37 @@ BinBuild.prototype.cmd = function (str) {
 
 BinBuild.prototype.run = function (cb) {
 	cb = cb || function () {};
-	var self = this;
 
 	if (urlRegex().test(this.src())) {
-		return this.get(function (err) {
+		return this.download(function (err) {
 			if (err) {
 				cb(err);
 				return;
 			}
 
-			self.exec(self._tmp, cb);
-		});
+			this.exec(this.tmp, cb);
+		}.bind(this));
 	}
 
-	read(this.src(), function (err, data) {
+	fs.readFile(this.src(), function (err, data) {
 		if (err && err.code !== 'EISDIR') {
 			cb(err);
 			return;
 		}
 
 		if (archiveType(data)) {
-			return self.decompress(function (err) {
+			return this.extract(function (err) {
 				if (err) {
 					cb(err);
 					return;
 				}
 
-				self.exec(self._tmp, cb);
-			});
+				this.exec(this.tmp, cb);
+			}.bind(this));
 		}
 
-		self.exec(self.src(), cb);
-	});
+		this.exec(this.src(), cb);
+	}.bind(this));
 };
 
 /**
@@ -111,17 +111,15 @@ BinBuild.prototype.run = function (cb) {
  */
 
 BinBuild.prototype.exec = function (cwd, cb) {
-	var self = this;
-
-	execSeries(this.cmd(), { cwd: cwd }, function (err) {
+	execSeries(this.cmd(), {cwd: cwd}, function (err) {
 		if (err) {
-			err.message = [self.cmd().join(' && '), err.message].join('\n');
+			err.message = [this.cmd().join(' && '), err.message].join('\n');
 			cb(err);
 			return;
 		}
 
-		rm(self._tmp, cb);
-	});
+		rm(this.tmp, cb);
+	}.bind(this));
 };
 
 /**
@@ -131,34 +129,36 @@ BinBuild.prototype.exec = function (cwd, cb) {
  * @api private
  */
 
-BinBuild.prototype.decompress = function (cb) {
+BinBuild.prototype.extract = function (cb) {
 	var decompress = new Decompress({
 		mode: '777',
 		strip: this.opts.strip
 	});
 
-	decompress.src(this.src());
-	decompress.dest(this._tmp);
-	decompress.run(cb);
+	decompress
+		.src(this.src())
+		.dest(this.tmp)
+		.run(cb);
 };
 
 /**
- * Download source
+ * Download source file
  *
  * @param {Function} cb
  * @api private
  */
 
-BinBuild.prototype.get = function (cb) {
+BinBuild.prototype.download = function (cb) {
 	var download = new Download({
 		strip: this.opts.strip,
 		extract: true,
 		mode: '777'
 	});
 
-	download.get(this.src());
-	download.dest(this._tmp);
-	download.run(cb);
+	download
+		.get(this.src())
+		.dest(this.tmp)
+		.run(cb);
 };
 
 /**
