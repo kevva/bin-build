@@ -31,11 +31,17 @@ build.run(function (err) {
 
 ### new BinBuild(opts)
 
-Creates a new `BinBuild` instance. Available options are:
+Creates a new `BinBuild` instance.
 
-* `strip`: Strip a number of leading paths from file names on extraction. Defaults to `1`.
+#### opts.strip
+
+Type: `Number`
+
+Strip a number of leading paths from file names on extraction.
 
 ### .src(str)
+
+#### str
 
 Type: `String`
 
@@ -44,11 +50,15 @@ path to a directory containing the source code.
 
 ### .cmd(str)
 
+#### str
+
 Type: `String`
 
 Add a command to run when building.
 
 ### .run(cb)
+
+#### cb(err)
 
 Type: `Function`
 
