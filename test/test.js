@@ -1,11 +1,11 @@
 'use strict';
 
-var BinBuild = require('../');
 var fs = require('fs');
-var nock = require('nock');
 var path = require('path');
-var fixture = path.join.bind(null, __dirname, 'fixtures');
+var nock = require('nock');
 var test = require('ava');
+var BinBuild = require('../');
+var fixture = path.join.bind(null, __dirname, 'fixtures');
 
 test('expose a constructor', function (t) {
 	t.plan(1);

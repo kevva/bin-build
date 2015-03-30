@@ -2,11 +2,13 @@
 
 > Easily build binaries
 
+
 ## Install
 
-```bash
+```
 $ npm install --save bin-build
 ```
+
 
 ## Usage
 
@@ -14,28 +16,25 @@ $ npm install --save bin-build
 var BinBuild = require('bin-build');
 
 var build = new BinBuild()
-	.src('http://www.lcdf.org/gifsicle/gifsicle-1.80.tar.gz')
-	.cmd('./configure --disable-gifview --disable-gifdiff')
-	.cmd('make install');
+    .src('http://www.lcdf.org/gifsicle/gifsicle-1.80.tar.gz')
+    .cmd('./configure --disable-gifview --disable-gifdiff')
+    .cmd('make install');
 
 build.run(function (err) {
-	if (err) {
-		throw err;
-	}
-
-	console.log('gifsicle built successfully');
+    console.log('gifsicle built successfully');
 });
 ```
 
+
 ## API
 
-### new BinBuild(opts)
+### new BinBuild(options)
 
 Creates a new `BinBuild` instance.
 
-#### opts.strip
+#### options.strip
 
-Type: `Number`
+Type: `number`
 
 Strip a number of leading paths from file names on extraction.
 
@@ -43,7 +42,7 @@ Strip a number of leading paths from file names on extraction.
 
 #### str
 
-Type: `String`
+Type: `string`
 
 Accepts a URL to a archive containing the source code, a path to an archive or a 
 path to a directory containing the source code.
@@ -52,17 +51,18 @@ path to a directory containing the source code.
 
 #### str
 
-Type: `String`
+Type: `string`
 
 Add a command to run when building.
 
-### .run(cb)
+### .run(callback)
 
-#### cb(err)
+#### callback(err)
 
-Type: `Function`
+Type: `function`
 
 Runs the build and returns an error if something has gone wrong
+
 
 ## License
 

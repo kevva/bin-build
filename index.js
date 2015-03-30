@@ -1,10 +1,10 @@
 'use strict';
 
+var fs = require('fs');
 var archiveType = require('archive-type');
 var execSeries = require('exec-series');
 var Decompress = require('decompress');
 var Download = require('download');
-var fs = require('fs');
 var rm = require('rimraf');
 var tempfile = require('tempfile');
 var urlRegex = require('url-regex');
@@ -25,6 +25,8 @@ function BinBuild(opts) {
 	this.opts.strip = this.opts.strip <= 0 ? 0 : !this.opts.strip ? 1 : this.opts.strip;
 	this.tmp = tempfile();
 }
+
+module.exports = BinBuild;
 
 /**
  * Define the source archive to download
@@ -160,9 +162,3 @@ BinBuild.prototype.download = function (cb) {
 		.dest(this.tmp)
 		.run(cb);
 };
-
-/**
- * Module exports
- */
-
-module.exports = BinBuild;
