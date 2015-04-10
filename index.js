@@ -5,7 +5,7 @@ var archiveType = require('archive-type');
 var execSeries = require('exec-series');
 var Decompress = require('decompress');
 var Download = require('download');
-var rm = require('rimraf');
+var rimraf = require('rimraf');
 var tempfile = require('tempfile');
 var urlRegex = require('url-regex');
 
@@ -120,7 +120,7 @@ BinBuild.prototype.exec = function (cwd, cb) {
 			return;
 		}
 
-		rm(this.tmp, cb);
+		rimraf(this.tmp, cb);
 	}.bind(this));
 };
 

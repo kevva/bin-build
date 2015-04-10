@@ -9,7 +9,7 @@ var fixture = path.join.bind(null, __dirname, 'fixtures');
 
 test('expose a constructor', function (t) {
 	t.plan(1);
-	t.assert(typeof BinBuild === 'function');
+	t.assert(typeof BinBuild === 'function', typeof BinBuild);
 });
 
 test('set source file', function (t) {
@@ -18,7 +18,7 @@ test('set source file', function (t) {
 	var build = new BinBuild()
 		.src('src.tar.gz');
 
-	t.assert(build._src === 'src.tar.gz');
+	t.assert(build._src === 'src.tar.gz', build._src);
 });
 
 test('add commands to run', function (t) {
@@ -28,8 +28,8 @@ test('add commands to run', function (t) {
 		.cmd('make')
 		.cmd('make install');
 
-	t.assert(build._cmd[0] === 'make');
-	t.assert(build._cmd[1] === 'make install');
+	t.assert(build._cmd[0] === 'make', build._cmd[0]);
+	t.assert(build._cmd[1] === 'make install', build._cmd[1]);
 });
 
 test('download and build source', function (t) {
@@ -93,7 +93,7 @@ test('pass the command error to the callback', function (t) {
 		.cmd('make install');
 
 	build.run(function (err) {
-		t.assert(err);
+		t.assert(err, err);
 		t.assert(err.message.indexOf(build.cmd().join(' && ')) !== -1);
 	});
 });
