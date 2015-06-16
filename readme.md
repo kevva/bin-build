@@ -1,4 +1,4 @@
-# bin-build [![Build Status](http://img.shields.io/travis/kevva/bin-build.svg?style=flat)](https://travis-ci.org/kevva/bin-build)
+# bin-build [![Build Status](https://travis-ci.org/kevva/bin-build.svg?branch=master)](https://travis-ci.org/kevva/bin-build)
 
 > Easily build binaries
 
