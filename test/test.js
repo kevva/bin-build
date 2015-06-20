@@ -1,9 +1,9 @@
 'use strict';
 
-var fs = require('fs');
 var path = require('path');
 var nock = require('nock');
 var test = require('ava');
+var pathExists = require('path-exists');
 var BinBuild = require('../');
 var fixture = path.join.bind(null, __dirname, 'fixtures');
 
@@ -51,7 +51,7 @@ test('download and build source', function (t) {
 		.run(function (err) {
 			t.assert(!err, err);
 			t.assert(scope.isDone());
-			t.assert(fs.existsSync(path.join(tmp, 'gifsicle')));
+			t.assert(pathExists.sync(path.join(tmp, 'gifsicle')));
 		});
 });
 
@@ -74,7 +74,7 @@ test('build source from existing archive', function (t) {
 		.run(function (err) {
 			t.assert(!err, err);
 			t.assert(scope.isDone());
-			t.assert(fs.existsSync(path.join(tmp, 'gifsicle')));
+			t.assert(pathExists.sync(path.join(tmp, 'gifsicle')));
 		});
 });
 
