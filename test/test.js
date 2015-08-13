@@ -1,5 +1,4 @@
 'use strict';
-
 var path = require('path');
 var nock = require('nock');
 var test = require('ava');

@@ -1,5 +1,4 @@
 'use strict';
-
 var fs = require('fs');
 var archiveType = require('archive-type');
 var execSeries = require('exec-series');
@@ -22,8 +21,13 @@ function BinBuild(opts) {
 	}
 
 	this.opts = opts || {};
-	this.opts.strip = this.opts.strip <= 0 ? 0 : !this.opts.strip ? 1 : this.opts.strip;
 	this.tmp = tempfile();
+
+	if (this.opts.strip <= 0) {
+		this.opts.strip = 0;
+	} else if (!this.opts.strip) {
+		this.opts.strip = 1;
+	}
 }
 
 module.exports = BinBuild;
@@ -90,7 +94,7 @@ BinBuild.prototype.run = function (cb) {
 		}
 
 		if (archiveType(data)) {
-			return this.extract(function (err) {
+			this.extract(function (err) {
 				if (err) {
 					cb(err);
 					return;
@@ -98,6 +102,8 @@ BinBuild.prototype.run = function (cb) {
 
 				this.exec(this.tmp, cb);
 			}.bind(this));
+
+			return;
 		}
 
 		this.exec(this.src(), cb);
