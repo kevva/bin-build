@@ -13,7 +13,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "node test/test.js"
+    "test": "xo && node test/test.js"
   },
   "files": [
     "index.js"
@@ -35,6 +35,7 @@
   "devDependencies": {
     "ava": "^0.0.4",
     "nock": "^2.6.0",
-    "path-exists": "^1.0.0"
+    "path-exists": "^1.0.0",
+    "xo": "*"
   }
 }
