@@ -24,13 +24,13 @@
     "make"
   ],
   "dependencies": {
-    "archive-type": "^2.0.0",
+    "archive-type": "^3.0.1",
     "decompress": "^2.1.1",
     "download": "^4.1.2",
     "exec-series": "^1.0.0",
     "rimraf": "^2.2.6",
     "tempfile": "^1.0.0",
-    "url-regex": "^2.0.2"
+    "url-regex": "^3.0.0"
   },
   "devDependencies": {
     "ava": "^0.0.4",
