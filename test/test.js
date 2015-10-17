@@ -55,12 +55,9 @@ test('download and build source', function (t) {
 });
 
 test('build source from existing archive', function (t) {
-	t.plan(3);
+	t.plan(2);
 
 	var tmp = path.join(__dirname, 'tmp');
-	var scope = nock('http://foo.com')
-		.get('/gifsicle.tar.gz')
-		.replyWithFile(200, fixture('test.tar.gz'));
 
 	new BinBuild()
 		.src(fixture('test.tar.gz'))
@@ -72,7 +69,6 @@ test('build source from existing archive', function (t) {
 		.cmd('make install')
 		.run(function (err) {
 			t.assert(!err, err);
-			t.assert(scope.isDone());
 			t.assert(pathExists.sync(path.join(tmp, 'gifsicle')));
 		});
 });
