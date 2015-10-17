@@ -25,7 +25,7 @@
   ],
   "dependencies": {
     "archive-type": "^3.0.1",
-    "decompress": "^2.1.1",
+    "decompress": "kevva/decompress#d1f881352b48b9f04318a046dc5033e6fae7a233",
     "download": "^4.1.2",
     "exec-series": "^1.0.0",
     "rimraf": "^2.2.6",
