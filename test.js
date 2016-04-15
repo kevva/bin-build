@@ -3,12 +3,15 @@ import nock from 'nock';
 import pathExists from 'path-exists';
 import pify from 'pify';
 import rimraf from 'rimraf';
+import tempfile from 'tempfile';
 import test from 'ava';
 import fn from './';
 
-const tmp = path.join(__dirname, 'tmp');
+test.beforeEach(t => {
+	t.context.tmp = tempfile();
+});
 
-test.afterEach(async () => await pify(rimraf)(tmp));
+test.afterEach(async t => await pify(rimraf)(t.context.tmp));
 
 test('download and build source', async t => {
 	const scope = nock('http://foo.com')
@@ -17,20 +20,20 @@ test('download and build source', async t => {
 
 	await fn.url('http://foo.com/gifsicle.tar.gz', [
 		'autoreconf -ivf',
-		`./configure --disable-gifview --disable-gifdiff --prefix="${tmp}" --bindir="${tmp}"`,
+		`./configure --disable-gifview --disable-gifdiff --prefix="${t.context.tmp}" --bindir="${t.context.tmp}"`,
 		'make install'
 	]);
 
 	t.true(scope.isDone());
-	t.true(await pathExists(path.join(tmp, 'gifsicle')));
+	t.true(await pathExists(path.join(t.context.tmp, 'gifsicle')));
 });
 
 test('build source from existing archive', async t => {
 	await fn.file(path.join(__dirname, 'fixtures', 'test.tar.gz'), [
 		'autoreconf -ivf',
-		`./configure --disable-gifview --disable-gifdiff --prefix="${tmp}" --bindir="${tmp}"`,
+		`./configure --disable-gifview --disable-gifdiff --prefix="${t.context.tmp}" --bindir="${t.context.tmp}"`,
 		'make install'
 	]);
 
-	t.true(await pathExists(path.join(tmp, 'gifsicle')));
+	t.true(await pathExists(path.join(t.context.tmp, 'gifsicle')));
 });
