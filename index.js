@@ -1,170 +1,71 @@
 'use strict';
-var fs = require('fs');
-var archiveType = require('archive-type');
-var execSeries = require('exec-series');
-var Decompress = require('decompress');
-var Download = require('download');
-var rimraf = require('rimraf');
-var tempfile = require('tempfile');
-var urlRegex = require('url-regex');
+const fs = require('fs');
+const archiveType = require('archive-type');
+const arrify = require('arrify');
+const Decompress = require('decompress');
+const Download = require('download');
+const execa = require('execa');
+const objectAssign = require('object-assign');
+const pify = require('pify');
+const promiseMapSeries = require('promise-map-series');
+const tempfile = require('tempfile');
+const urlRegex = require('url-regex');
 
-/**
- * Initialize new `BinBuild`
- *
- * @param {Object} opts
- * @api public
- */
+const exec = (cmd, cwd) => promiseMapSeries(cmd, x => execa.shell(x, {cwd}));
 
-function BinBuild(opts) {
-	if (!(this instanceof BinBuild)) {
-		return new BinBuild(opts);
-	}
+const download = (file, opts) => {
+	const download = new Download({
+		extract: true,
+		mode: '777',
+		strip: opts.strip
+	})
+		.get(file)
+		.dest(opts.tmp);
 
-	this.opts = opts || {};
-	this.tmp = tempfile();
-
-	if (this.opts.strip <= 0) {
-		this.opts.strip = 0;
-	} else if (!this.opts.strip) {
-		this.opts.strip = 1;
-	}
-}
-
-module.exports = BinBuild;
-
-/**
- * Define the source archive to download
- *
- * @param {String} str
- * @api public
- */
-
-BinBuild.prototype.src = function (str) {
-	if (!arguments.length) {
-		return this._src;
-	}
-
-	this._src = str;
-	return this;
+	return new Promise((resolve, reject) => download.run(err => err ? reject(err) : resolve()));
 };
 
-/**
- * Add a command to run
- *
- * @param {String} str
- * @api public
- */
+const extract = (file, opts) => {
+	const decompress = new Decompress({
+		mode: '777',
+		strip: opts.strip
+	})
+		.src(file)
+		.dest(opts.tmp);
 
-BinBuild.prototype.cmd = function (str) {
-	if (!arguments.length) {
-		return this._cmd;
-	}
-
-	this._cmd = this._cmd || [];
-	this._cmd.push(str);
-
-	return this;
+	return new Promise((resolve, reject) => decompress.run(err => err ? reject(err) : resolve()));
 };
 
-/**
- * Build
- *
- * @param {Function} cb
- * @api public
- */
+const read = (file, opts) => {
+	return pify(fs.readFile)(file).then(data => {
+		if (!archiveType(data)) {
+			throw new Error('Invalid file');
+		}
 
-BinBuild.prototype.run = function (cb) {
-	cb = cb || function () {};
+		return extract(file, opts);
+	});
+};
 
-	if (urlRegex().test(this.src())) {
-		return this.download(function (err) {
-			if (err) {
-				cb(err);
-				return;
+module.exports = (file, cmd, opts) => {
+	if (typeof file !== 'string') {
+		return Promise.reject(new Error('Source file or directory required'));
+	}
+
+	cmd = arrify(cmd);
+	opts = objectAssign({
+		strip: 1,
+		tmp: tempfile()
+	}, opts);
+
+	const fn = urlRegex().test(file) ? download : read;
+
+	return fn(file, opts)
+		.then(() => exec(cmd, opts.tmp))
+		.catch(err => {
+			if (err && err.code !== 'EISDIR') {
+				throw err;
 			}
 
-			this.exec(this.tmp, cb);
-		}.bind(this));
-	}
-
-	fs.readFile(this.src(), function (err, data) {
-		if (err && err.code !== 'EISDIR') {
-			cb(err);
-			return;
-		}
-
-		if (archiveType(data)) {
-			this.extract(function (err) {
-				if (err) {
-					cb(err);
-					return;
-				}
-
-				this.exec(this.tmp, cb);
-			}.bind(this));
-
-			return;
-		}
-
-		this.exec(this.src(), cb);
-	}.bind(this));
-};
-
-/**
- * Execute commands
- *
- * @param {String} cwd
- * @param {Function} cb
- * @api private
- */
-
-BinBuild.prototype.exec = function (cwd, cb) {
-	execSeries(this.cmd(), {cwd: cwd}, function (err) {
-		if (err) {
-			err.message = [this.cmd().join(' && '), err.message].join('\n');
-			cb(err);
-			return;
-		}
-
-		rimraf(this.tmp, cb);
-	}.bind(this));
-};
-
-/**
- * Decompress source
- *
- * @param {Function} cb
- * @api private
- */
-
-BinBuild.prototype.extract = function (cb) {
-	var decompress = new Decompress({
-		mode: '777',
-		strip: this.opts.strip
-	});
-
-	decompress
-		.src(this.src())
-		.dest(this.tmp)
-		.run(cb);
-};
-
-/**
- * Download source file
- *
- * @param {Function} cb
- * @api private
- */
-
-BinBuild.prototype.download = function (cb) {
-	var download = new Download({
-		strip: this.opts.strip,
-		extract: true,
-		mode: '777'
-	});
-
-	download
-		.get(this.src())
-		.dest(this.tmp)
-		.run(cb);
+			return exec(cmd, file);
+		});
 };
