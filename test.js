@@ -4,7 +4,7 @@ import pathExists from 'path-exists';
 import pify from 'pify';
 import rimraf from 'rimraf';
 import test from 'ava';
-import fn from '../';
+import fn from './';
 
 const tmp = path.join(__dirname, 'tmp');
 

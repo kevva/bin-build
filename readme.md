@@ -32,14 +32,14 @@ Returns a promise.
 
 #### file
 
-*Required*  
+*Required*<br>
 Type: `string`
 
 Accepts a URL to a archive containing the source code, a path to an archive or a path to a directory containing the source code.
 
 #### commands
 
-*Required*  
+*Required*<br>
 Type: `array`
 
 An array of commands to run when building.
@@ -48,7 +48,7 @@ An array of commands to run when building.
 
 ##### strip
 
-Type: `number`  
+Type: `number`<br>
 Default: `1`
 
 Strip a number of leading paths from file names on extraction.
