@@ -7,25 +7,23 @@ const objectAssign = require('object-assign');
 const promiseMapSeries = require('promise-map-series');
 const tempfile = require('tempfile');
 
-const exec = (cmd, cwd, opts) => {
-	return promiseMapSeries(arrify(cmd), x => {
-		return execa.shell(x, {cwd}).catch(err => {
-			const msg = [`Command \`${x}\` failed in directory ${cwd}.`];
+const exec = (cmd, cwd, opts) => promiseMapSeries(arrify(cmd), x => {
+	return execa.shell(x, {cwd}).catch(err => {
+		const msg = [`Command \`${x}\` failed in directory ${cwd}.`];
 
-			if (arrify(opts.dependencies).length !== 0) {
-				msg.push(
-					' Make sure that the following dependencies are installed:\n\n',
-					opts.dependencies.map(x => `    ${x}`).join('\n')
-				);
-			}
+		if (arrify(opts.dependencies).length !== 0) {
+			msg.push(
+				' Make sure that the following dependencies are installed:\n\n',
+				opts.dependencies.map(x => `    ${x}`).join('\n')
+			);
+		}
 
-			msg.push(`\n\n${err.message}`);
-			err.message = msg.join('');
+		msg.push(`\n\n${err.message}`);
+		err.message = msg.join('');
 
-			throw err;
-		});
+		throw err;
 	});
-};
+});
 
 exports.dir = (dir, cmd, opts) => {
 	if (typeof dir !== 'string') {
