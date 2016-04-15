@@ -15,7 +15,7 @@ test('download and build source', async t => {
 		.get('/gifsicle.tar.gz')
 		.replyWithFile(200, path.join(__dirname, 'fixtures', 'test.tar.gz'));
 
-	await fn('http://foo.com/gifsicle.tar.gz', [
+	await fn.url('http://foo.com/gifsicle.tar.gz', [
 		'autoreconf -ivf',
 		`./configure --disable-gifview --disable-gifdiff --prefix="${tmp}" --bindir="${tmp}"`,
 		'make install'
@@ -26,7 +26,7 @@ test('download and build source', async t => {
 });
 
 test('build source from existing archive', async t => {
-	await fn(path.join(__dirname, 'fixtures', 'test.tar.gz'), [
+	await fn.file(path.join(__dirname, 'fixtures', 'test.tar.gz'), [
 		'autoreconf -ivf',
 		`./configure --disable-gifview --disable-gifdiff --prefix="${tmp}" --bindir="${tmp}"`,
 		'make install'

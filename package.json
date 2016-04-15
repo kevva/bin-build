@@ -24,21 +24,19 @@
     "make"
   ],
   "dependencies": {
-    "archive-type": "^3.2.0",
     "arrify": "^1.0.1",
     "decompress": "^3.0.0",
     "download": "^4.4.3",
     "execa": "^0.2.2",
     "object-assign": "^4.0.1",
-    "pify": "^2.3.0",
     "promise-map-series": "^0.2.2",
-    "tempfile": "^1.1.1",
-    "url-regex": "^3.1.1"
+    "tempfile": "^1.1.1"
   },
   "devDependencies": {
     "ava": "*",
     "nock": "^8.0.0",
     "path-exists": "^2.1.0",
+    "pify": "^2.3.0",
     "rimraf": "^2.5.2",
     "xo": "*"
   },
