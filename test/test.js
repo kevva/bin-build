@@ -1,43 +1,36 @@
-'use strict';
-var path = require('path');
-var nock = require('nock');
-var test = require('ava');
-var pathExists = require('path-exists');
-var binBuild = require('../');
-var fixture = path.join.bind(null, __dirname, 'fixtures');
-var tmp = path.join(__dirname, 'tmp');
+import path from 'path';
+import nock from 'nock';
+import pathExists from 'path-exists';
+import pify from 'pify';
+import rimraf from 'rimraf';
+import test from 'ava';
+import fn from '../';
 
-test('download and build source', function (t) {
-	t.plan(2);
+const tmp = path.join(__dirname, 'tmp');
 
-	var scope = nock('http://foo.com')
+test.afterEach(async () => await pify(rimraf)(tmp));
+
+test('download and build source', async t => {
+	const scope = nock('http://foo.com')
 		.get('/gifsicle.tar.gz')
-		.replyWithFile(200, fixture('test.tar.gz'));
+		.replyWithFile(200, path.join(__dirname, 'fixtures', 'test.tar.gz'));
 
-	binBuild('http://foo.com/gifsicle.tar.gz', [
+	await fn('http://foo.com/gifsicle.tar.gz', [
 		'autoreconf -ivf',
-		[
-			'./configure --disable-gifview --disable-gifdiff',
-			'--prefix="' + tmp + '" --bindir="' + tmp + '"'
-		].join(' '),
+		`./configure --disable-gifview --disable-gifdiff --prefix="${tmp}" --bindir="${tmp}"`,
 		'make install'
-	]).then(function () {
-		t.assert(scope.isDone());
-		t.assert(pathExists.sync(path.join(tmp, 'gifsicle')));
-	});
+	]);
+
+	t.true(scope.isDone());
+	t.true(await pathExists(path.join(tmp, 'gifsicle')));
 });
 
-test('build source from existing archive', function (t) {
-	t.plan(1);
-
-	binBuild(fixture('test.tar.gz'), [
+test('build source from existing archive', async t => {
+	await fn(path.join(__dirname, 'fixtures', 'test.tar.gz'), [
 		'autoreconf -ivf',
-		[
-			'./configure --disable-gifview --disable-gifdiff',
-			'--prefix="' + tmp + '" --bindir="' + tmp + '"'
-		].join(' '),
+		`./configure --disable-gifview --disable-gifdiff --prefix="${tmp}" --bindir="${tmp}"`,
 		'make install'
-	]).then(function () {
-		t.assert(pathExists.sync(path.join(tmp, 'gifsicle')));
-	});
+	]);
+
+	t.true(await pathExists(path.join(tmp, 'gifsicle')));
 });

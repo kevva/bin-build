@@ -13,7 +13,7 @@
     "node": ">=4"
   },
   "scripts": {
-    "test": "xo && node test/test.js"
+    "test": "xo && ava"
   },
   "files": [
     "index.js"
@@ -36,9 +36,10 @@
     "url-regex": "^3.1.1"
   },
   "devDependencies": {
-    "ava": "^0.0.4",
-    "nock": "^2.6.0",
-    "path-exists": "^1.0.0",
+    "ava": "*",
+    "nock": "^8.0.0",
+    "path-exists": "^2.1.0",
+    "rimraf": "^2.5.2",
     "xo": "*"
   },
   "xo": {
