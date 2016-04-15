@@ -33,7 +33,7 @@ binBuild.file('gifsicle-1.80.tar.gz', [
 
 ## API
 
-### binBuild.dir(dir, commands)
+### binBuild.dir(dir, commands, [options])
 
 #### dir
 
@@ -48,6 +48,14 @@ Path to a directory containing the source code.
 Type: `array`
 
 An array of commands to run when building.
+
+#### options
+
+##### dependencies
+
+Type: `array`
+
+Array of dependencies required for the binary to build.
 
 ### binBuild.file(file, commands, [options])
 
@@ -66,6 +74,12 @@ Type: `array`
 An array of commands to run when building.
 
 #### options
+
+##### dependencies
+
+Type: `array`
+
+Array of dependencies required for the binary to build.
 
 ##### strip
 
@@ -91,6 +105,12 @@ Type: `array`
 An array of commands to run when building.
 
 #### options
+
+##### dependencies
+
+Type: `array`
+
+Array of dependencies required for the binary to build.
 
 ##### strip
 

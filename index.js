@@ -7,14 +7,32 @@ const objectAssign = require('object-assign');
 const promiseMapSeries = require('promise-map-series');
 const tempfile = require('tempfile');
 
-const exec = (cmd, cwd) => promiseMapSeries(arrify(cmd), x => execa.shell(x, {cwd}));
+const exec = (cmd, cwd, opts) => {
+	return promiseMapSeries(arrify(cmd), x => {
+		return execa.shell(x, {cwd}).catch(err => {
+			const msg = [`Command \`${x}\` failed in directory ${cwd}.`];
 
-exports.dir = (dir, cmd) => {
+			if (arrify(opts.dependencies).length !== 0) {
+				msg.push(
+					' Make sure that the following dependencies are installed:\n\n',
+					opts.dependencies.map(x => `    ${x}`).join('\n')
+				);
+			}
+
+			msg.push(`\n\n${err.message}`);
+			err.message = msg.join('');
+
+			throw err;
+		});
+	});
+};
+
+exports.dir = (dir, cmd, opts) => {
 	if (typeof dir !== 'string') {
 		return Promise.reject(new Error('Directory is required'));
 	}
 
-	return exec(cmd, dir);
+	return exec(cmd, dir, objectAssign({}, opts));
 };
 
 exports.file = (file, cmd, opts) => {
@@ -35,7 +53,7 @@ exports.file = (file, cmd, opts) => {
 		.dest(opts.tmp);
 
 	return new Promise((resolve, reject) => decompress.run(err => err ? reject(err) : resolve()))
-		.then(() => exec(cmd, opts.tmp));
+		.then(() => exec(cmd, opts.tmp, opts));
 };
 
 exports.url = (url, cmd, opts) => {
@@ -57,5 +75,5 @@ exports.url = (url, cmd, opts) => {
 		.dest(opts.tmp);
 
 	return new Promise((resolve, reject) => download.run(err => err ? reject(err) : resolve()))
-		.then(() => exec(cmd, opts.tmp));
+		.then(() => exec(cmd, opts.tmp, opts));
 };
