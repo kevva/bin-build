@@ -55,7 +55,29 @@ An array of commands to run when building.
 
 Type: `array`
 
-Array of dependencies required for the binary to build.
+Array of dependencies (compile-time libraries etc.) required for the binary to build. E.g:
+
+```js
+binBuild.dir('/tmp/optipng-0.7.6', [
+	'./configure --with-system-zlib',
+	'make install'
+], {
+	dependencies: [
+		'libpng-dev - sudo apt-get install libpng-dev',
+		'zlib1g-dev - sudo apt-get install zlib1g-dev'
+	]
+}).catch(err => {
+	console.log(err.message);
+	/*
+		Command `make install` failed in directory /tmp/optipng-0.7.6. Make sure you have the following dependencies installed:
+
+		    libpng-dev - sudo apt-get install libpng-dev
+		    zlib1g-dev - sudo apt-get install zlib1g-dev
+
+		...
+	*/
+});
+```
 
 ### binBuild.file(file, commands, [options])
 
@@ -79,7 +101,7 @@ An array of commands to run when building.
 
 Type: `array`
 
-Array of dependencies required for the binary to build.
+Array of dependencies (compile-time libraries etc.) required for the binary to build. See [example](#dependencies).
 
 ##### strip
 
@@ -110,7 +132,7 @@ An array of commands to run when building.
 
 Type: `array`
 
-Array of dependencies required for the binary to build.
+Array of dependencies (compile-time libraries etc.) required for the binary to build. See [example](#dependencies).
 
 ##### strip
 
