@@ -11,7 +11,9 @@ test.beforeEach(t => {
 	t.context.tmp = tempfile();
 });
 
-test.afterEach(async t => await pify(rimraf)(t.context.tmp));
+test.afterEach(async t => {
+	await pify(rimraf)(t.context.tmp);
+});
 
 test('download and build source', async t => {
 	const scope = nock('http://foo.com')
