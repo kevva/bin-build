@@ -1,7 +1,7 @@
 'use strict';
 const arrify = require('arrify');
-const Decompress = require('decompress');
-const Download = require('download');
+const decompress = require('decompress');
+const download = require('download');
 const execa = require('execa');
 const promiseMapSeries = require('promise-map-series');
 const tempfile = require('tempfile');
@@ -23,52 +23,38 @@ const exec = (cmd, cwd, opts) => promiseMapSeries(arrify(cmd), x => execa.shell(
 }));
 
 exports.dir = (dir, cmd, opts) => {
+	opts = Object.assign({}, opts);
+
 	if (typeof dir !== 'string') {
 		return Promise.reject(new Error('Directory is required'));
 	}
 
-	return exec(cmd, dir, Object.assign({}, opts));
+	return exec(cmd, dir, opts);
 };
 
 exports.file = (file, cmd, opts) => {
+	opts = Object.assign({strip: 1}, opts);
+
 	if (typeof file !== 'string') {
 		return Promise.reject(new Error('File is required'));
 	}
 
-	opts = Object.assign({
-		strip: 1,
-		tmp: tempfile()
-	}, opts);
+	const tmp = tempfile();
 
-	const decompress = new Decompress({
-		mode: '777',
-		strip: opts.strip
-	})
-		.src(file)
-		.dest(opts.tmp);
-
-	return new Promise((resolve, reject) => decompress.run(err => err ? reject(err) : resolve()))
-		.then(() => exec(cmd, opts.tmp, opts));
+	return decompress(file, tmp, opts).then(() => exec(cmd, tmp, opts));
 };
 
 exports.url = (url, cmd, opts) => {
+	opts = Object.assign({
+		extract: true,
+		strip: 1
+	}, opts);
+
 	if (typeof url !== 'string') {
 		return Promise.reject(new Error('URL is required'));
 	}
 
-	opts = Object.assign({
-		strip: 1,
-		tmp: tempfile()
-	}, opts);
+	const tmp = tempfile();
 
-	const download = new Download({
-		extract: true,
-		mode: '777',
-		strip: opts.strip
-	})
-		.get(url)
-		.dest(opts.tmp);
-
-	return new Promise((resolve, reject) => download.run(err => err ? reject(err) : resolve()))
-		.then(() => exec(cmd, opts.tmp, opts));
+	return download(url, tmp, opts).then(() => exec(cmd, tmp, opts));
 };

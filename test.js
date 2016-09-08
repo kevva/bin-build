@@ -47,7 +47,8 @@ test('show helpful error message on failure', async t => {
 		'    cake'
 	].join('');
 
-	t.throws(fn.file(path.join(__dirname, 'fixtures', 'test.tar.gz'), [
-		'make install'
-	], {dependencies: ['unicorn', 'cake']}), new RegExp(msg));
+	t.throws(fn.file(path.join(__dirname, 'fixtures', 'test.tar.gz'), ['fail'], {dependencies: [
+		'unicorn',
+		'cake'
+	]}), new RegExp(msg));
 });

@@ -45,7 +45,7 @@ Path to a directory containing the source code.
 #### commands
 
 *Required*<br>
-Type: `array`
+Type: `Array`
 
 An array of commands to run when building.
 
@@ -53,7 +53,7 @@ An array of commands to run when building.
 
 ##### dependencies
 
-Type: `array`
+Type: `Array`
 
 Array of dependencies (compile-time libraries etc.) required for the binary to build. E.g:
 
@@ -91,7 +91,7 @@ Path to a archive file containing the source code.
 #### commands
 
 *Required*<br>
-Type: `array`
+Type: `Array`
 
 An array of commands to run when building.
 
@@ -99,7 +99,7 @@ An array of commands to run when building.
 
 ##### dependencies
 
-Type: `array`
+Type: `Array`
 
 Array of dependencies (compile-time libraries etc.) required for the binary to build. See [example](#dependencies).
 
@@ -122,7 +122,7 @@ URL to a archive file containing the source code.
 #### commands
 
 *Required*<br>
-Type: `array`
+Type: `Array`
 
 An array of commands to run when building.
 
@@ -130,7 +130,7 @@ An array of commands to run when building.
 
 ##### dependencies
 
-Type: `array`
+Type: `Array`
 
 Array of dependencies (compile-time libraries etc.) required for the binary to build. See [example](#dependencies).
 
