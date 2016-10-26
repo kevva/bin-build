@@ -3,33 +3,17 @@ const arrify = require('arrify');
 const decompress = require('decompress');
 const download = require('download');
 const execa = require('execa');
-const promiseMapSeries = require('promise-map-series');
+const pMapSeries = require('p-map-series');
 const tempfile = require('tempfile');
 
-const exec = (cmd, cwd, opts) => promiseMapSeries(arrify(cmd), x => execa.shell(x, {cwd}).catch(err => {
-	const msg = [`Command \`${x}\` failed in directory ${cwd}.`];
+const exec = (cmd, cwd) => pMapSeries(arrify(cmd), x => execa.shell(x, {cwd}));
 
-	if (arrify(opts.dependencies).length !== 0) {
-		msg.push(
-			' Make sure that the following dependencies are installed:\n\n',
-			opts.dependencies.map(x => `    ${x}`).join('\n')
-		);
-	}
-
-	msg.push(`\n\n${err.message}`);
-	err.message = msg.join('');
-
-	throw err;
-}));
-
-exports.dir = (dir, cmd, opts) => {
-	opts = Object.assign({}, opts);
-
+exports.dir = (dir, cmd) => {
 	if (typeof dir !== 'string') {
 		return Promise.reject(new Error('Directory is required'));
 	}
 
-	return exec(cmd, dir, opts);
+	return exec(cmd, dir);
 };
 
 exports.file = (file, cmd, opts) => {
@@ -41,7 +25,7 @@ exports.file = (file, cmd, opts) => {
 
 	const tmp = tempfile();
 
-	return decompress(file, tmp, opts).then(() => exec(cmd, tmp, opts));
+	return decompress(file, tmp, opts).then(() => exec(cmd, tmp));
 };
 
 exports.url = (url, cmd, opts) => {
@@ -56,5 +40,5 @@ exports.url = (url, cmd, opts) => {
 
 	const tmp = tempfile();
 
-	return download(url, tmp, opts).then(() => exec(cmd, tmp, opts));
+	return download(url, tmp, opts).then(() => exec(cmd, tmp));
 };

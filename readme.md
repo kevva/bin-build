@@ -33,75 +33,35 @@ binBuild.file('gifsicle-1.80.tar.gz', [
 
 ## API
 
-### binBuild.dir(dir, commands, [options])
+### binBuild.dir(dir, commands)
 
 #### dir
 
-*Required*<br>
 Type: `string`
 
 Path to a directory containing the source code.
 
 #### commands
 
-*Required*<br>
 Type: `Array`
 
-An array of commands to run when building.
-
-#### options
-
-##### dependencies
-
-Type: `Array`
-
-Array of dependencies (compile-time libraries etc.) required for the binary to build. E.g:
-
-```js
-binBuild.dir('/tmp/optipng-0.7.6', [
-	'./configure --with-system-zlib',
-	'make install'
-], {
-	dependencies: [
-		'libpng-dev - sudo apt-get install libpng-dev',
-		'zlib1g-dev - sudo apt-get install zlib1g-dev'
-	]
-}).catch(err => {
-	console.log(err.message);
-	/*
-		Command `make install` failed in directory /tmp/optipng-0.7.6. Make sure you have the following dependencies installed:
-
-		    libpng-dev - sudo apt-get install libpng-dev
-		    zlib1g-dev - sudo apt-get install zlib1g-dev
-
-		...
-	*/
-});
-```
+Commands to run when building.
 
 ### binBuild.file(file, commands, [options])
 
 #### file
 
-*Required*<br>
 Type: `string`
 
 Path to a archive file containing the source code.
 
 #### commands
 
-*Required*<br>
 Type: `Array`
 
-An array of commands to run when building.
+Commands to run when building.
 
 #### options
-
-##### dependencies
-
-Type: `Array`
-
-Array of dependencies (compile-time libraries etc.) required for the binary to build. See [example](#dependencies).
 
 ##### strip
 
@@ -114,25 +74,17 @@ Strip a number of leading paths from file names on extraction.
 
 #### url
 
-*Required*<br>
 Type: `string`
 
 URL to a archive file containing the source code.
 
 #### commands
 
-*Required*<br>
 Type: `Array`
 
-An array of commands to run when building.
+Commands to run when building.
 
 #### options
-
-##### dependencies
-
-Type: `Array`
-
-Array of dependencies (compile-time libraries etc.) required for the binary to build. See [example](#dependencies).
 
 ##### strip
 

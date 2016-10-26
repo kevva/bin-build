@@ -39,16 +39,3 @@ test('build source from existing archive', async t => {
 
 	t.true(await pathExists(path.join(t.context.tmp, 'gifsicle')));
 });
-
-test('show helpful error message on failure', async t => {
-	const msg = [
-		'Make sure that the following dependencies are installed:\n\n',
-		'    unicorn\n',
-		'    cake'
-	].join('');
-
-	t.throws(fn.file(path.join(__dirname, 'fixtures', 'test.tar.gz'), ['fail'], {dependencies: [
-		'unicorn',
-		'cake'
-	]}), new RegExp(msg));
-});
