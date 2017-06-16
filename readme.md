@@ -63,6 +63,8 @@ Commands to run when building.
 
 #### options
 
+Type: `Object`
+
 ##### strip
 
 Type: `number`<br>
@@ -85,6 +87,8 @@ Type: `Array`
 Commands to run when building.
 
 #### options
+
+Type: `Object`
 
 ##### strip
 

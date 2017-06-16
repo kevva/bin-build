@@ -24,19 +24,17 @@
     "make"
   ],
   "dependencies": {
-    "arrify": "^1.0.1",
     "decompress": "^4.0.0",
-    "download": "^5.0.2",
-    "execa": "^0.5.0",
+    "download": "^6.2.2",
+    "execa": "^0.7.0",
     "p-map-series": "^1.0.0",
-    "tempfile": "^1.1.1"
+    "tempfile": "^2.0.0"
   },
   "devDependencies": {
     "ava": "*",
+    "del": "^3.0.0",
     "nock": "^9.0.0",
     "path-exists": "^3.0.0",
-    "pify": "^2.3.0",
-    "rimraf": "^2.5.2",
     "xo": "*"
   },
   "xo": {
