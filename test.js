@@ -39,7 +39,7 @@ test('build source from existing archive', async t => {
 });
 
 test('accepts a string', async t => {
-	await t.throws(m.dir([]), 'Expected a `string`, got `object`');
+	await t.throws(m.directory([]), 'Expected a `string`, got `object`');
 	await t.throws(m.file([]), 'Expected a `string`, got `object`');
 	await t.throws(m.url([]), 'Expected a `string`, got `object`');
 });
