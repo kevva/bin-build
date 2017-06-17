@@ -7,7 +7,7 @@ const tempfile = require('tempfile');
 
 const exec = (cmd, cwd) => pMapSeries(cmd, x => execa.shell(x, {cwd}));
 
-exports.dir = (dir, cmd) => {
+exports.directory = (dir, cmd) => {
 	if (typeof dir !== 'string') {
 		return Promise.reject(new TypeError(`Expected a \`string\`, got \`${typeof dir}\``));
 	}

@@ -33,9 +33,9 @@ binBuild.file('gifsicle-1.80.tar.gz', [
 
 ## API
 
-### binBuild.dir(dir, commands)
+### binBuild.directory(directory, commands)
 
-#### dir
+#### directory
 
 Type: `string`
 
