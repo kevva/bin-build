@@ -1,6 +1,6 @@
 {
   "name": "bin-build",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Easily build binaries",
   "license": "MIT",
   "repository": "kevva/bin-build",
@@ -10,7 +10,7 @@
     "url": "https://github.com/kevva"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   },
   "scripts": {
     "test": "xo && ava"
@@ -25,7 +25,7 @@
   ],
   "dependencies": {
     "decompress": "^4.0.0",
-    "download": "^6.2.2",
+    "download": "^7.0.0",
     "execa": "^0.7.0",
     "p-map-series": "^1.0.0",
     "tempfile": "^2.0.0"
@@ -35,6 +35,6 @@
     "del": "^3.0.0",
     "nock": "^9.0.0",
     "path-exists": "^3.0.0",
-    "xo": "*"
+    "xo": "^0.21.0"
   }
 }
