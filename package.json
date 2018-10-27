@@ -1,6 +1,6 @@
 {
   "name": "bin-build",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Easily build binaries",
   "license": "MIT",
   "repository": "kevva/bin-build",
@@ -24,8 +24,8 @@
     "make"
   ],
   "dependencies": {
-    "decompress": "^4.0.0",
-    "download": "^7.0.0",
+    "decompress": "^4.2.0",
+    "download": "^7.1.0",
     "execa": "^0.7.0",
     "p-map-series": "^1.0.0",
     "tempfile": "^2.0.0"
