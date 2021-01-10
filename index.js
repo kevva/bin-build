@@ -5,7 +5,10 @@ const execa = require('execa');
 const pMapSeries = require('p-map-series');
 const tempfile = require('tempfile');
 
-const exec = (cmd, cwd) => pMapSeries(cmd, x => execa(x, {cwd, shell: true}));
+const exec = (cmd, cwd) => pMapSeries(cmd, x => {
+	console.log(x);
+	return execa(x, {cwd, shell: true});
+});
 
 exports.directory = (dir, cmd) => {
 	if (typeof dir !== 'string') {
