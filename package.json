@@ -10,7 +10,7 @@
     "url": "https://github.com/kevva"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=7.6.0"
   },
   "scripts": {
     "test": "xo && ava"
@@ -24,17 +24,23 @@
     "make"
   ],
   "dependencies": {
-    "decompress": "^4.0.0",
-    "download": "^7.0.0",
-    "execa": "^0.7.0",
-    "p-map-series": "^1.0.0",
-    "tempfile": "^2.0.0"
+    "decompress": "^4.2.1",
+    "download": "^8.0.0",
+    "execa": "^5.0.0",
+    "p-map-series": "^2.1.0",
+    "tempfile": "^3.0.0"
   },
   "devDependencies": {
-    "ava": "*",
-    "del": "^3.0.0",
-    "nock": "^9.0.0",
-    "path-exists": "^3.0.0",
-    "xo": "*"
+    "ava": "^3.15.0",
+    "del": "^6.0.0",
+    "esm": "^3.2.25",
+    "nock": "^13.0.5",
+    "path-exists": "^4.0.0",
+    "xo": "^0.37.1"
+  },
+  "ava": {
+    "require": [
+      "esm"
+    ]
   }
 }

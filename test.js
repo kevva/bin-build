@@ -4,7 +4,7 @@ import nock from 'nock';
 import pathExists from 'path-exists';
 import tempfile from 'tempfile';
 import test from 'ava';
-import m from '.';
+import m from './index.js';
 
 test.beforeEach(t => {
 	t.context.tmp = tempfile();
@@ -39,7 +39,7 @@ test('build source from existing archive', async t => {
 });
 
 test('accepts a string', async t => {
-	await t.throws(m.directory([]), 'Expected a `string`, got `object`');
-	await t.throws(m.file([]), 'Expected a `string`, got `object`');
-	await t.throws(m.url([]), 'Expected a `string`, got `object`');
+	await t.throwsAsync(m.directory([]), {message: 'Expected a `string`, got `object`'});
+	await t.throwsAsync(m.file([]), {message: 'Expected a `string`, got `object`'});
+	await t.throwsAsync(m.url([]), {message: 'Expected a `string`, got `object`'});
 });
