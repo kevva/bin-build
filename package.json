@@ -5,6 +5,7 @@
   "license": "MIT",
   "repository": "kevva/bin-build",
   "type": "module",
+  "types": "index.d.ts",
   "author": {
     "name": "Kevin Mårtensson",
     "email": "kevinmartensson@gmail.com",
