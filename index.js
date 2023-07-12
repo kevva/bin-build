@@ -1,43 +1,49 @@
-'use strict';
-const decompress = require('decompress');
-const download = require('download');
-const execa = require('execa');
-const pMapSeries = require('p-map-series');
-const tempfile = require('tempfile');
+import download from 'download';
+import decompress from 'decompress';
+import execa from 'execa';
+import pMapSeries from 'p-map-series';
+import tempfile from 'tempfile';
 
 const exec = (cmd, cwd) => pMapSeries(cmd, x => execa.shell(x, {cwd}));
 
-exports.directory = (dir, cmd) => {
+export function directory(dir, cmd) {
 	if (typeof dir !== 'string') {
 		return Promise.reject(new TypeError(`Expected a \`string\`, got \`${typeof dir}\``));
 	}
 
 	return exec(cmd, dir);
-};
+}
 
-exports.file = (file, cmd, opts) => {
-	opts = Object.assign({strip: 1}, opts);
+export function file(file, cmd, options) {
+	options = Object.assign({strip: 1}, options);
 
 	if (typeof file !== 'string') {
 		return Promise.reject(new TypeError(`Expected a \`string\`, got \`${typeof file}\``));
 	}
 
-	const tmp = tempfile();
+	const temporary = tempfile();
 
-	return decompress(file, tmp, opts).then(() => exec(cmd, tmp));
-};
+	return decompress(file, temporary, options).then(() => exec(cmd, temporary));
+}
 
-exports.url = (url, cmd, opts) => {
-	opts = Object.assign({
+export function url(url, cmd, options) {
+	options = Object.assign({
 		extract: true,
-		strip: 1
-	}, opts);
+		strip: 1,
+	}, options);
 
 	if (typeof url !== 'string') {
 		return Promise.reject(new TypeError(`Expected a \`string\`, got \`${typeof url}\``));
 	}
 
-	const tmp = tempfile();
+	const temporary = tempfile();
 
-	return download(url, tmp, opts).then(() => exec(cmd, tmp));
+	return download(url, temporary, options).then(() => exec(cmd, temporary));
+}
+
+/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
+export default {
+	directory,
+	file,
+	url,
 };
