@@ -26,9 +26,9 @@
   ],
   "dependencies": {
     "decompress": "^4.0.0",
-    "download": "^7.0.0",
-    "execa": "^0.7.0",
-    "p-map-series": "^1.0.0",
+    "download": "^8.0.0",
+    "execa": "^7.0.0",
+    "p-map-series": "^3.0.0",
     "tempfile": "^5.0.0"
   },
   "devDependencies": {

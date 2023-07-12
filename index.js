@@ -1,10 +1,10 @@
 import download from 'download';
 import decompress from 'decompress';
-import execa from 'execa';
+import {execa} from 'execa';
 import pMapSeries from 'p-map-series';
 import tempfile from 'tempfile';
 
-const exec = (cmd, cwd) => pMapSeries(cmd, x => execa.shell(x, {cwd}));
+const exec = (cmd, cwd) => pMapSeries(cmd, x => execa(x, {cwd, shell: true}));
 
 export function directory(dir, cmd) {
 	if (typeof dir !== 'string') {
