@@ -1,7 +1,7 @@
 # bin-build 
 [![npm version](https://badge.fury.io/js/@localnerve%2Fbin-build.svg)](https://badge.fury.io/js/@localnerve%2Fbin-build)
 ![Verify](https://github.com/localnerve/bin-build/workflows/Verify/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/localnerve/bin-build/badge.svg?branch=main)](https://coveralls.io/github/localnerve/bin-build?branch=public-package)
+[![Coverage Status](https://coveralls.io/repos/github/localnerve/bin-build/badge.svg?branch=public-package)](https://coveralls.io/github/localnerve/bin-build?branch=public-package)
 
 > Easily build binaries
 
