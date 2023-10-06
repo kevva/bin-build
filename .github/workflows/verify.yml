@@ -1,0 +1,32 @@
+name: Verify
+on:
+  push:
+    branches: [ master, public-package ]
+  pull_request:
+    branches: [ master, public-package ]
+
+jobs:
+  verify:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - name: Run Lint and Test
+      run: npm run lint && npm test
+    - name: Coverage Upload
+      if: ${{ success() }}
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ./coverage/lcov.info

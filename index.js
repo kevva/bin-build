@@ -1,43 +1,61 @@
-'use strict';
-const decompress = require('decompress');
-const download = require('download');
-const execa = require('execa');
-const pMapSeries = require('p-map-series');
-const tempfile = require('tempfile');
+import decompress from '@xhmikosr/decompress';
+import download from '@xhmikosr/downloader';
+import {execaCommand} from 'execa';
+import pMapSeries from 'p-map-series';
+import tempfile from 'tempfile';
 
-const exec = (cmd, cwd) => pMapSeries(cmd, x => execa.shell(x, {cwd}));
+function exec (cmd, cwd) {
+	return pMapSeries(cmd, x => execaCommand(x, {
+		cwd,
+		shell: true
+	}));
+}
 
-exports.directory = (dir, cmd) => {
+export function directory (dir, cmd) {
 	if (typeof dir !== 'string') {
 		return Promise.reject(new TypeError(`Expected a \`string\`, got \`${typeof dir}\``));
 	}
 
 	return exec(cmd, dir);
-};
+}
 
-exports.file = (file, cmd, opts) => {
-	opts = Object.assign({strip: 1}, opts);
+export function file (file, cmd, options) {
+	const optionsWithDefaults = {
+		strip: 1,
+		...options
+	};
 
 	if (typeof file !== 'string') {
 		return Promise.reject(new TypeError(`Expected a \`string\`, got \`${typeof file}\``));
 	}
 
-	const tmp = tempfile();
+	const temporary = tempfile();
 
-	return decompress(file, tmp, opts).then(() => exec(cmd, tmp));
-};
+	return decompress(file, temporary, optionsWithDefaults).then(() => exec(cmd, temporary));
+}
 
-exports.url = (url, cmd, opts) => {
-	opts = Object.assign({
+export function url (url, cmd, options) {
+	const optionsWithDefaults = {
 		extract: true,
-		strip: 1
-	}, opts);
+		decompress: {
+			strip: options?.strip ?? 1
+		},
+		...options
+	};
 
 	if (typeof url !== 'string') {
 		return Promise.reject(new TypeError(`Expected a \`string\`, got \`${typeof url}\``));
 	}
 
-	const tmp = tempfile();
+	const temporary = tempfile();
 
-	return download(url, tmp, opts).then(() => exec(cmd, tmp));
+	return download(url, temporary, optionsWithDefaults).then(() => exec(cmd, temporary));
+}
+
+const all = {
+	directory,
+	file,
+	url
 };
+
+export default all;

@@ -1,0 +1,5 @@
+__tests__
+.github
+coverage
+tmp
+*.tgz

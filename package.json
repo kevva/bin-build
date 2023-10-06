@@ -1,19 +1,30 @@
 {
-  "name": "bin-build",
-  "version": "3.0.0",
+  "name": "@localnerve/bin-build",
+  "version": "4.0.0",
   "description": "Easily build binaries",
   "license": "MIT",
-  "repository": "kevva/bin-build",
+  "type": "module",
+  "exports": {
+    "default": "./index.js"
+  },
   "author": {
     "name": "Kevin Mårtensson",
     "email": "kevinmartensson@gmail.com",
     "url": "https://github.com/kevva"
   },
-  "engines": {
-    "node": ">=6"
+  "maintainers": [{
+    "name": "Alex Grant",
+    "email": "alex@localnerve.com",
+    "url": "https://localnerve.com"
+  }],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/localnerve/bin-build.git"
   },
   "scripts": {
-    "test": "xo && ava"
+    "lint": "eslint .",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testTimeout=20000",
+    "debug": "node --inspect-brk --experimental-vm-modules node_modules/jest/bin/jest.js --testTimeout=300000"
   },
   "files": [
     "index.js"
@@ -24,17 +35,19 @@
     "make"
   ],
   "dependencies": {
-    "decompress": "^4.0.0",
-    "download": "^7.0.0",
-    "execa": "^0.7.0",
-    "p-map-series": "^1.0.0",
-    "tempfile": "^2.0.0"
+    "@xhmikosr/decompress": "^9.0.1",
+    "@xhmikosr/downloader": "^13.0.1",
+    "execa": "^8.0.1",
+    "p-map-series": "^3.0.0",
+    "tempfile": "^5.0.0"
   },
   "devDependencies": {
-    "ava": "*",
-    "del": "^3.0.0",
-    "nock": "^9.0.0",
-    "path-exists": "^3.0.0",
-    "xo": "*"
+    "@babel/preset-env": "^7.22.20",
+    "jest": "^29.7.0",
+    "nock": "^13.3.3",
+    "eslint": "^8.50.0"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
