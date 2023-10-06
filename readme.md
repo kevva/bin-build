@@ -7,6 +7,8 @@
 
 **This is an updated fork of kevva/bin-build that is maintained**
 
+> Version 4.0.0 on public-package branch is the forward maintained version under @localnerve/bin-build
+
 ## Install
 
 ```
